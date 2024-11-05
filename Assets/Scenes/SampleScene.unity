@@ -318,6 +318,8 @@ MonoBehaviour:
   cellPrefab: {fileID: 7959554769721185397, guid: 82926578f326d5a4ba56141f2d11dec4, type: 3}
   rows: 5
   columns: 5
+  cellSpacing: {x: 5, y: 5}
+  cellSize: {x: 100, y: 100}
 --- !u!114 &1389526786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,7 +402,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
