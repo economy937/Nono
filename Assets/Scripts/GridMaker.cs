@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,12 +11,36 @@ public class GridMaker : MonoBehaviour
     public Vector2 cellSize = new Vector2(50, 50);
 
     private GridLayoutGroup gridLayout;
+    private CellController[,] cellGrid; 
 
     void Start()
     {
         gridLayout = GetComponent<GridLayoutGroup>();
         SetupGridLayout();
         GenerateGrid();
+    }
+
+    void Update()
+    {
+        // 'F' 키를 눌렀을 때 연속된 Filled 셀 수를 출력
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("Row Filled Counts:");
+            for (int i = 0; i < rows; i++)
+            {
+                List<int> rowCounts = GetRowFilledCounts(i);
+                string rowDebug = $"Row {i}: " + string.Join(", ", rowCounts);
+                Debug.Log(rowDebug);
+            }
+
+            Debug.Log("Column Filled Counts:");
+            for (int j = 0; j < columns; j++)
+            {
+                List<int> columnCounts = GetColumnFilledCounts(j);
+                string columnDebug = $"Column {j}: " + string.Join(", ", columnCounts);
+                Debug.Log(columnDebug);
+            }
+        }
     }
 
     void SetupGridLayout()
@@ -32,12 +54,66 @@ public class GridMaker : MonoBehaviour
     void GenerateGrid()
     {
         ClearGrid();
+        cellGrid = new CellController[rows, columns]; 
 
-        for (int i = 0; i < rows * columns; i++)
+        for (int i = 0; i < rows; i++)
         {
-            GameObject cell = Instantiate(cellPrefab, transform);
-            cell.name = "Cell_" + i;
+            for (int j = 0; j < columns; j++)
+            {
+                GameObject cell = Instantiate(cellPrefab, transform);
+                cell.name = $"Cell_{i}_{j}";
+
+                CellController cellController = cell.GetComponent<CellController>();
+                cellGrid[i, j] = cellController;
+            }
         }
+    }
+
+    // 연속된 Filled 셀의 수를 계산
+    public List<int> GetRowFilledCounts(int row)
+    {
+        List<int> filledCounts = new List<int>();
+        int count = 0;
+
+        for (int j = 0; j < columns; j++)
+        {
+            if (cellGrid[row, j].IsFilled())
+            {
+                count++;
+            }
+            else
+            {
+                if (count > 0) filledCounts.Add(count);
+                count = 0;
+            }
+        }
+
+        if (count > 0) filledCounts.Add(count); 
+
+        return filledCounts;
+    }
+
+    public List<int> GetColumnFilledCounts(int column)
+    {
+        List<int> filledCounts = new List<int>();
+        int count = 0;
+
+        for (int i = 0; i < rows; i++)
+        {
+            if (cellGrid[i, column].IsFilled())
+            {
+                count++;
+            }
+            else
+            {
+                if (count > 0) filledCounts.Add(count);
+                count = 0;
+            }
+        }
+
+        if (count > 0) filledCounts.Add(count); 
+
+        return filledCounts;
     }
 
     void ClearGrid()
@@ -46,11 +122,5 @@ public class GridMaker : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-    }
-
-    void OnValidate()
-    {
-        if (rows < 1) rows = 1;
-        if (columns < 1) columns = 1;
     }
 }

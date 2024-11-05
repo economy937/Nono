@@ -84,4 +84,9 @@ public class CellController : MonoBehaviour
             }
         }
     }
+
+    public bool IsFilled()
+    {
+        return currentState == CellState.Filled;
+    }
 }
