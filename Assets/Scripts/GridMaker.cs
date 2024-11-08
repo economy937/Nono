@@ -5,18 +5,21 @@ using UnityEngine.UI;
 public class GridMaker : MonoBehaviour
 {
     public GameObject cellPrefab;
-    public int rows = 5;
-    public int columns = 5;
+
+    [HideInInspector]
+    public int rows;
+    [HideInInspector]
+    public int columns;
+
     public Vector2 cellSpacing = new Vector2(5, 5);
     public Vector2 cellSize = new Vector2(50, 50);
 
     private GridLayoutGroup gridLayout;
-    private CellController[,] cellGrid; 
+    private CellController[,] cellGrid;
 
     void Start()
     {
         gridLayout = GetComponent<GridLayoutGroup>();
-        SetupGridLayout();
         GenerateGrid();
     }
 
@@ -54,7 +57,9 @@ public class GridMaker : MonoBehaviour
     public void GenerateGrid()
     {
         ClearGrid();
-        cellGrid = new CellController[rows, columns]; 
+        SetupGridLayout();
+
+        cellGrid = new CellController[rows, columns];
 
         for (int i = 0; i < rows; i++)
         {
@@ -68,6 +73,7 @@ public class GridMaker : MonoBehaviour
             }
         }
     }
+
 
     // 연속된 Filled 셀의 수를 계산
     public List<int> GetRowFilledCounts(int row)
