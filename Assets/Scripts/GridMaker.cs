@@ -51,7 +51,7 @@ public class GridMaker : MonoBehaviour
         gridLayout.spacing = cellSpacing;
     }
 
-    void GenerateGrid()
+    public void GenerateGrid()
     {
         ClearGrid();
         cellGrid = new CellController[rows, columns]; 

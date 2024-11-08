@@ -7,7 +7,8 @@ public class CheckAnswerButton : MonoBehaviour
 {
     public GridMaker gridMaker; 
     public StageManager stageManager; 
-    public TextMeshProUGUI resultText; 
+    public TextMeshProUGUI resultText;
+    public GameObject nextBtn;
 
     public void CheckAnswer()
     {
@@ -38,11 +39,12 @@ public class CheckAnswerButton : MonoBehaviour
                     isCorrect = false;
                     break;
                 }
+                nextBtn.SetActive(true);
             }
         }
 
         // 결과 표시
-        resultText.text = isCorrect ? "정답입니다!" : "틀렸습니다. 다시 시도하세요!";
+        resultText.text = isCorrect ? "정답입니다!" : "오답입니다!";
     }
 
     private bool IsPatternMatch(List<int> playerPattern, List<int> correctPattern)
