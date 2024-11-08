@@ -33,7 +33,7 @@ public class StageSelect : MonoBehaviour
         }
         else
         {
-            
+            Debug.Log("스테이지 더 없음");
         }
     }
 
