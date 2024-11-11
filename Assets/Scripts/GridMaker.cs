@@ -20,6 +20,7 @@ public class GridMaker : MonoBehaviour
     void Start()
     {
         gridLayout = GetComponent<GridLayoutGroup>();
+        SetupGridLayout();
         GenerateGrid();
     }
 
@@ -49,7 +50,7 @@ public class GridMaker : MonoBehaviour
     void SetupGridLayout()
     {
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        gridLayout.constraintCount = columns;
+        gridLayout.constraintCount = columns + 1;
         gridLayout.cellSize = cellSize;
         gridLayout.spacing = cellSpacing;
     }
@@ -58,18 +59,25 @@ public class GridMaker : MonoBehaviour
     {
         ClearGrid();
         SetupGridLayout();
+        cellGrid = new CellController[rows + 1, columns + 1]; 
 
-        cellGrid = new CellController[rows, columns];
-
-        for (int i = 0; i < rows; i++)
+        for (int i = 0; i < rows + 1; i++)
         {
-            for (int j = 0; j < columns; j++)
+            for (int j = 0; j < columns + 1; j++)
             {
                 GameObject cell = Instantiate(cellPrefab, transform);
                 cell.name = $"Cell_{i}_{j}";
 
                 CellController cellController = cell.GetComponent<CellController>();
-                cellGrid[i, j] = cellController;
+
+                if (i == 0 || j == 0)
+                {
+                    cellController.SetAsHeaderCell();
+                }
+                else
+                {
+                    cellGrid[i - 1, j - 1] = cellController;
+                }
             }
         }
     }
@@ -94,7 +102,7 @@ public class GridMaker : MonoBehaviour
             }
         }
 
-        if (count > 0) filledCounts.Add(count); 
+        if (count > 0) filledCounts.Add(count);
 
         return filledCounts;
     }
@@ -117,7 +125,7 @@ public class GridMaker : MonoBehaviour
             }
         }
 
-        if (count > 0) filledCounts.Add(count); 
+        if (count > 0) filledCounts.Add(count);
 
         return filledCounts;
     }

@@ -3,36 +3,46 @@ using UnityEngine.UI;
 
 public class CellController : MonoBehaviour
 {
-    private enum CellState { Empty, Filled, Incorrect }
+    private enum CellState { Empty, Filled, Incorrect, Hint}
     private CellState currentState = CellState.Empty;
 
     private Image cellImage;
     public GameObject xMark;
 
+    private bool isHeaderCell = false;
+
     void Start()
     {
         cellImage = GetComponent<Image>();
         UpdateCellDisplay();
+        if(currentState == CellState.Hint)
+        {
+            cellImage.color = Color.gray;
+        }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!isHeaderCell)
         {
-            if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+            if (Input.GetMouseButtonDown(0))
             {
-                CycleState();
+                if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+                {
+                    CycleState();
+                }
             }
-        }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+            if (Input.GetMouseButtonDown(1))
             {
-                SetIncorrectState();
+                if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+                {
+                    SetIncorrectState();
+                }
             }
         }
     }
+
 
     void CycleState()
     {
@@ -58,8 +68,16 @@ public class CellController : MonoBehaviour
     {
         if (xMark != null)
         {
-            currentState = CellState.Incorrect;
-            UpdateCellDisplay();
+            if(currentState == CellState.Incorrect)
+            {
+                currentState = CellState.Empty;
+                UpdateCellDisplay();
+            }
+            else
+            {
+                currentState = CellState.Incorrect;
+                UpdateCellDisplay();
+            }
         }
     }
 
@@ -89,4 +107,11 @@ public class CellController : MonoBehaviour
     {
         return currentState == CellState.Filled;
     }
+
+    public void SetAsHeaderCell()
+    {
+        isHeaderCell = true;
+        currentState = CellState.Hint;
+    }
+
 }

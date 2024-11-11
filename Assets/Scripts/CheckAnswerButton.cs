@@ -17,8 +17,7 @@ public class CheckAnswerButton : MonoBehaviour
 
         bool isCorrect = true;
 
-        // 행 패턴 비교
-        for (int i = 0; i < gridMaker.rows; i++)
+        for (int i = 0; i < gridMaker.rows && isCorrect; i++)
         {
             List<int> playerRowCounts = gridMaker.GetRowFilledCounts(i);
             if (!IsPatternMatch(playerRowCounts, correctRowAnswer[i]))
@@ -26,25 +25,17 @@ public class CheckAnswerButton : MonoBehaviour
                 isCorrect = false;
                 break;
             }
-        }
 
-        // 열 패턴 비교
-        if (isCorrect) // 행이 맞았을 때만 열 확인
-        {
-            for (int j = 0; j < gridMaker.columns; j++)
+            List<int> playerColumnCounts = gridMaker.GetColumnFilledCounts(i);
+            if (!IsPatternMatch(playerColumnCounts, correctColumnAnswer[i]))
             {
-                List<int> playerColumnCounts = gridMaker.GetColumnFilledCounts(j);
-                if (!IsPatternMatch(playerColumnCounts, correctColumnAnswer[j]))
-                {
-                    isCorrect = false;
-                    break;
-                }
-                nextBtn.SetActive(true);
+                isCorrect = false;
+                break;
             }
         }
 
-        // 결과 표시
         resultText.text = isCorrect ? "정답입니다!" : "오답입니다!";
+        nextBtn.SetActive(isCorrect);
     }
 
     private bool IsPatternMatch(List<int> playerPattern, List<int> correctPattern)
